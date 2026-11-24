@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
 const source = (path) => readFileSync(new URL('../' + path, import.meta.url), 'utf8');
 
 test('homepage uses the approved Figma V4/V5 UI, not legacy HOME_HTML', () => {
@@ -37,4 +37,26 @@ test('GET / returns a real 307 redirect and never mutates immutable headers', as
   assert.equal(response.status, 307);
   assert.equal(response.headers.get('location'), 'https://xtreme-avatar-platform.example.test/xtreme-v3/index.html');
   assert.match(response.headers.get('cache-control') ?? '', /no-store/);
+});
+
+test('legacy homepage is absent from canonical repository', () => {
+  assert.equal(existsSync(new URL('../home-html.ts', import.meta.url)), false);
+  const current = source('app/route.ts');
+  assert.match(current, /xtreme-v3\\/index\\.html/);
+  assert.doesNotMatch(current, /HOME_HTML\s*\}/);
+});
+
+test('existing approved UI and connection sources survive cleanup', () => {
+  for (const file of [
+    'public/xtreme-v3/index.html',
+    'public/xtreme-v3/main.js',
+    'public/xtreme-v3/styles.css',
+    'public/xtreme-v3/fidelity.css',
+    'server/supabase-auth.ts',
+    'server/assistant-voice.mjs',
+    'server/communications.mjs',
+    'server/call-desk-link.mjs',
+    'public/tavus-layer.js',
+    'public/assistant-voice.js'
+  ]) assert.equal(existsSync(new URL('../'+file, import.meta.url)), true, file);
 });
