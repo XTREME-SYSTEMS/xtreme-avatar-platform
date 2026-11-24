@@ -12,7 +12,13 @@ export const dynamic = 'force-dynamic';
 
 export function GET(request: Request) {
   const target = new URL('/xtreme-v3/index.html', request.url);
-  const response = Response.redirect(target, 307);
-  response.headers.set('Cache-Control', 'no-store');
-  return response;
+  // A Response.redirect() instance has immutable headers on this runtime.
+  // Construct the redirect atomically, including the no-store policy.
+  return new Response(null, {
+    status: 307,
+    headers: {
+      Location: target.href,
+      'Cache-Control': 'private, no-store',
+    },
+  });
 }
