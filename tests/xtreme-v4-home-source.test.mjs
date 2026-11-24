@@ -42,7 +42,7 @@ test('GET / returns a real 307 redirect and never mutates immutable headers', as
 test('legacy homepage is absent from canonical repository', () => {
   assert.equal(existsSync(new URL('../home-html.ts', import.meta.url)), false);
   const current = source('app/route.ts');
-  assert.match(current, /xtreme-v3\\/index\\.html/);
+  assert.ok(current.includes("'/xtreme-v3/index.html'"));
   assert.doesNotMatch(current, /HOME_HTML\s*\}/);
 });
 
