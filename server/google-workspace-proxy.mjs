@@ -2,6 +2,7 @@
 // Railway runtime; this module handles only verified app-session forwarding.
 export const GOOGLE_RUNTIME_ORIGIN='https://eden-outbound-call-sandbox-code.up.railway.app';
 export const GOOGLE_APP_ORIGINS=Object.freeze([
+ 'https://www.xtremeavatar.com',
  'https://xtreme-avatar-git-migration-vercel-supabase-xtreme-ai-systems.vercel.app',
  'https://xtreme-avatar-2t5t65mxr-xtreme-ai-systems.vercel.app',
  'https://xtreme-avatar-git-migration-ver-dd2679-strategic-minds-advisory.vercel.app'
