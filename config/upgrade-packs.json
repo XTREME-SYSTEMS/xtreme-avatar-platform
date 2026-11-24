@@ -1,0 +1,73 @@
+{
+  "schema": "xtreme.upgrade-packs.v1",
+  "default_state": "disabled-until-consent-and-tests",
+  "skins": [
+    "Aluminum Gold",
+    "Silver Slate",
+    "Electric Blue",
+    "Ivory Minimal",
+    "Copper Industrial"
+  ],
+  "packs": [
+    {
+      "id": 1,
+      "name": "Executive Chief of Staff",
+      "status": "not_activated",
+      "scope": "tenant-specific"
+    },
+    {
+      "id": 2,
+      "name": "Business Launch & Rebrand",
+      "status": "not_activated",
+      "scope": "tenant-specific"
+    },
+    {
+      "id": 3,
+      "name": "Sales & Lead Hunter",
+      "status": "not_activated",
+      "scope": "tenant-specific"
+    },
+    {
+      "id": 4,
+      "name": "Marketing Studio",
+      "status": "not_activated",
+      "scope": "tenant-specific"
+    },
+    {
+      "id": 5,
+      "name": "Autonomous Software Factory",
+      "status": "not_activated",
+      "scope": "tenant-specific"
+    },
+    {
+      "id": 6,
+      "name": "Workspace & Operations",
+      "status": "not_activated",
+      "scope": "tenant-specific"
+    },
+    {
+      "id": 7,
+      "name": "Construction & Bidding",
+      "status": "not_activated",
+      "scope": "tenant-specific"
+    },
+    {
+      "id": 8,
+      "name": "Real Estate Opportunities",
+      "status": "not_activated",
+      "scope": "tenant-specific"
+    },
+    {
+      "id": 9,
+      "name": "Markets & Wealth Intelligence",
+      "status": "not_activated",
+      "scope": "tenant-specific"
+    },
+    {
+      "id": 10,
+      "name": "Personal Life & Companion",
+      "status": "not_activated",
+      "scope": "tenant-specific"
+    }
+  ]
+}
