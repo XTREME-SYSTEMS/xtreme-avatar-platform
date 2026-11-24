@@ -1,0 +1,27 @@
+name: CI Failure Triage
+on:
+  workflow_run:
+    workflows: ["Xtreme Avatar CI"]
+    types: [completed]
+permissions:
+  contents: read
+  issues: write
+jobs:
+  incident:
+    if: github.event.workflow_run.conclusion == 'failure'
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Create deduplicated incident (no untrusted checkout)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RUN_SHA: ${{ github.event.workflow_run.head_sha }}
+          RUN_URL: ${{ github.event.workflow_run.html_url }}
+        run: |
+          set -euo pipefail
+          [[ "$RUN_SHA" =~ ^[0-9a-f]{40}$ ]] || exit 1
+          title="[Incident] CI failure ${RUN_SHA:0:12}"
+          existing="$(gh issue list --state open --search "${RUN_SHA:0:12} in:title" --json number --jq '.[0].number // ""')"
+          if [[ -n "$existing" ]]; then exit 0; fi
+          printf 'CI failed on exact commit %s\nRun: %s\n\nEve requires a verified repo grant and original mission claim before any automatic repair.\n' "$RUN_SHA" "$RUN_URL" > /tmp/xtreme-incident-body.txt
+          gh issue create --title "$title" --body-file /tmp/xtreme-incident-body.txt
