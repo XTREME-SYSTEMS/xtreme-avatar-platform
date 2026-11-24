@@ -1,0 +1,75 @@
+{
+  "sourceSha256": "378622bf63261bb7983a7954b83b6d331b91b02878aee9ec3fc735b0e52eb0b5",
+  "testSha256": "89295d9051d7e273a0949414b1e74a011a45f37f7e369e81d30842dc68c4f906",
+  "syntaxExit": 0,
+  "syntaxStderr": "",
+  "testExit": 0,
+  "stdout": "✔ Calendar is opt-in and only a verified enabled read adapter exposes the action (21.2308ms)\n✔ one intentional read uses account and revision fences, GET, no-store, and renders only plain event fields (34.8575ms)\n✔ all-day dates avoid timezone shifts and exclusive end dates while timed events show provider zone (4.0187ms)\n✔ loading suppresses overlapping reads and shows honest empty or capped results (8.6301ms)\n✔ read failures and malformed data clear old appointments without showing provider internals (6.1203ms)\n✔ closing or leaving clears data, aborts pending work and ignores late responses (10.2076ms)\n✔ logout and account replacement abort or discard all private results (3.5778ms)\n✔ status refresh, reconnect and disconnect review clear private data and fence old revisions (10.0734ms)\n✔ out-of-order requests after close cannot overwrite a newer Calendar result (3.2116ms)\n✔ timed-out reads show a safe retry state without automatically fetching again (2.8155ms)\n✔ a displayed calendar clears when a later focus detects a replaced account (2.7697ms)\n✔ hasMore is honored independently of count and never implies an empty seven-day calendar (2.2024ms)\n✔ a revision conflict offers explicit status recovery without automatically reading events (2.5979ms)\n✔ known Calendar errors use fixed actionable copy while all raw messages stay private (16.0265ms)\n✔ frontend enforces the final bounded event field contract (8.6876ms)\n✔ the actual Python adapter fixture renders through the client with canonical dates and UTF-16 caps (6.2387ms)\n✔ hub renders real tools and setup-required Google apps without collecting keys or auto-linking (5.4469ms)\n✔ Google Workspace details expose honest setup and no inoperable authorization controls (10.5238ms)\n✔ search and categories filter names and specialties without injecting HTML (3.4417ms)\n✔ only a verified fresh server status shows Connected and a failed refresh removes that claim (3.6078ms)\n✔ connect starts one same-origin request and navigates to the exact server-owned consent page (7.3648ms)\n✔ unsafe consent URLs never navigate and ambiguous starts require a status refresh before retry (10.9148ms)\n✔ pending approvals can resume, revoked links can reconnect, and blocked frame navigation has a safe top-level link (2.8659ms)\n✔ disconnect requires explicit review then confirmation and sends the exact observed revision (2.2129ms)\n✔ stale revoke and malformed status never imply disconnection or fabricate a connected badge (3.0923ms)\n✔ closing or leaving the hub while start is pending cannot hijack later navigation (2.2637ms)\n✔ account end aborts requests, clears the dialog and ignores late link responses (1.9342ms)\n✔ another cookie account cannot render results or authorize a late link (2.8505ms)\n✔ revisiting or refocusing the hub rechecks links revoked in another tab (2.5843ms)\n✔ provider tools never masquerade as personal account links and memory controls stay on Call Desk (1.5402ms)\n✔ existing connection screen offers one Workspace entry and leaves home idle (5.584ms)\n✔ setup-required has all eight read-only choices and no inoperable consent button (12.7525ms)\n✔ selected services use one consent flow, fixed account headers and no auth-account change (5.7756ms)\n✔ partial permission grants stay distinct from enabled assistant actions (2.7554ms)\n✔ callback flags and raw provider errors cannot fabricate a verified connection (2.0599ms)\n✔ unsafe Google authorization destinations are blocked and starts do not auto-retry (10.2535ms)\n✔ failed or malformed status clears claims and hides raw transport errors (7.5893ms)\n✔ local disconnect requires review and uses observed revision, then rechecks status (3.1341ms)\n✔ stale disconnect does not claim success or repeat destructive requests (1.9316ms)\n✔ logout aborts all Google requests and ignores late OAuth responses (2.8221ms)\n✔ account switch and server account_changed suppress old account results (2.7931ms)\n✔ closing or leaving while approval starts cannot hijack later navigation (1.4444ms)\n✔ blocked frame navigation presents only the validated top-level Google link (1.9036ms)\n✔ focus refresh detects revoked grants and reconnect controls require a fresh check (1.52ms)\n✔ slow Workspace checks allow the upstream budget, time out safely and never auto-retry (4.5526ms)\n✔ direct OAuth callback load refreshes actual server status before claiming connected (2.1695ms)\n✔ exact new-account runtime states accept revision zero and eight ungranted services (4.0904ms)\n✔ inaccessible saved grants can be locally disconnected without available Google config or account display (1.6327ms)\nℹ tests 48\nℹ suites 0\nℹ pass 48\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 312.3723\n",
+  "stderr": "",
+  "parity": [
+    {
+      "file": "app/globals.css",
+      "unchanged": true
+    },
+    {
+      "file": "home-html.ts",
+      "unchanged": true
+    },
+    {
+      "file": "public/app.js",
+      "unchanged": false
+    },
+    {
+      "file": "public/assist.css",
+      "unchanged": true
+    },
+    {
+      "file": "public/assistant-chat.css",
+      "unchanged": true
+    },
+    {
+      "file": "public/assistant-settings.css",
+      "unchanged": true
+    },
+    {
+      "file": "public/assistant-voice.css",
+      "unchanged": false
+    },
+    {
+      "file": "public/call-desk-link-complete.css",
+      "unchanged": true
+    },
+    {
+      "file": "public/google-workspace.css",
+      "unchanged": true
+    },
+    {
+      "file": "public/polish.css",
+      "unchanged": true
+    },
+    {
+      "file": "public/pwa.css",
+      "unchanged": true
+    },
+    {
+      "file": "public/style.css",
+      "unchanged": true
+    },
+    {
+      "file": "public/tavus-layer.css",
+      "unchanged": true
+    },
+    {
+      "file": "public/voice-fields.css",
+      "unchanged": true
+    },
+    {
+      "file": "public/work-hub.css",
+      "unchanged": true
+    },
+    {
+      "file": "vendor/shadcn-tailwind-4.13.0.css",
+      "unchanged": true
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="1640" viewBox="0 0 880 1640" preserveAspectRatio="xMidYMid slice">
+<defs>
+ <linearGradient id="silver" x1="0" y1="0" x2="1" y2="0">
+  <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+  <stop offset=".11" stop-color="#f0f2f6" stop-opacity=".17"/>
+  <stop offset=".34" stop-color="#ffffff" stop-opacity=".86"/>
+  <stop offset=".61" stop-color="#f6f7ff" stop-opacity=".58"/>
+  <stop offset=".83" stop-color="#f2f2f8" stop-opacity=".90"/>
+  <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+ </linearGradient>
+ <linearGradient id="gold" x1="0" y1="0" x2="1" y2="0">
+  <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+  <stop offset=".41" stop-color="#fff0bd" stop-opacity=".45"/>
+  <stop offset=".6" stop-color="#ffd36b" stop-opacity=".55"/>
+  <stop offset="1" stop-color="#ffdf8f" stop-opacity="0"/>
+ </linearGradient>
+ <filter id="mist" x="-70%" y="-70%" width="240%" height="240%"><feGaussianBlur stdDeviation="31"/></filter>
+ <filter id="halo" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="10"/></filter>
+</defs>
+<!-- Primary translucent sheet floats between content and the dark metal. -->
+<path d="M-135 840C84 571 228 534 414 507C647 475 671 270 1016 256" stroke="#dce2e9" stroke-width="170" opacity=".16" filter="url(#mist)" fill="none"/>
+<path d="M-135 840C84 571 228 534 414 507C647 475 671 270 1016 256" stroke="url(#silver)" stroke-width="34" opacity=".63" filter="url(#halo)" fill="none"/>
+<path d="M-135 840C84 571 228 534 414 507C647 475 671 270 1016 256" stroke="#ffffff" stroke-width="2.25" opacity=".76" fill="none"/>
+<path d="M-132 869C85 620 227 569 425 528C673 483 696 301 1000 277" stroke="#e8ecf7" stroke-width="1.4" opacity=".32" fill="none"/>
+<!-- The lower silver glow frames the priority/result cards without obscuring labels. -->
+<path d="M-190 1420C122 1218 225 1295 424 1174C601 1065 694 1108 1000 985" stroke="#f6f7ff" stroke-width="140" opacity=".12" filter="url(#mist)" fill="none"/>
+<path d="M-190 1420C122 1218 225 1295 424 1174C601 1065 694 1108 1000 985" stroke="url(#silver)" stroke-width="28" opacity=".63" filter="url(#halo)" fill="none"/>
+<path d="M-190 1420C122 1218 225 1295 424 1174C601 1065 694 1108 1000 985" stroke="#ffffff" stroke-width="1.9" opacity=".60" fill="none"/>
+<!-- Tiny gold accents along the horizontal separation. -->
+<path d="M-40 236C203 244 465 216 939 239" stroke="url(#gold)" stroke-width="7" opacity=".45" filter="url(#halo)" fill="none"/>
+</svg>

@@ -1,0 +1,10 @@
+const fs=require('fs'),cp=require('child_process'),path=require('path'),crypto=require('crypto');
+const root=path.resolve(__dirname,'..');
+const hash=p=>crypto.createHash('sha256').update(fs.readFileSync(path.join(root,p))).digest('hex');
+const run=args=>cp.spawnSync(process.execPath,args,{cwd:root,encoding:'utf8',timeout:90000,env:{...process.env,TZ:'Pacific/Honolulu'}});
+const syntax=run(['--check','public/google-workspace.js']);
+const tests=run(['--test','tests/google-calendar-client.test.mjs','tests/google-workspace-oauth-client.test.mjs','tests/google-workspace-client.test.mjs']);
+const files=cp.spawnSync('git',['ls-files'],{cwd:root,encoding:'utf8'}).stdout.split(/\r?\n/).filter(p=>p==='public/app.js'||p.endsWith('.css')||/home[-_]html/i.test(p));
+const parity=files.map(file=>{const baseline=cp.spawnSync('git',['show','HEAD:'+file],{cwd:root,encoding:'buffer'});return {file,unchanged:baseline.status===0&&fs.readFileSync(path.join(root,file)).equals(baseline.stdout)};});
+const out={sourceSha256:hash('public/google-workspace.js'),testSha256:hash('tests/google-calendar-client.test.mjs'),syntaxExit:syntax.status,syntaxStderr:syntax.stderr,testExit:tests.status,stdout:tests.stdout,stderr:tests.stderr,parity};
+fs.writeFileSync(path.join(root,'docs','google-calendar-ui-test-results.json'),JSON.stringify(out,null,2));

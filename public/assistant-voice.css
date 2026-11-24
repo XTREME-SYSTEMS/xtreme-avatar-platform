@@ -1,0 +1,11 @@
+.assistant-voice-controls{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:22px auto 0;max-width:340px}
+.assistant-voice-controls .silver-button{min-height:48px;min-width:108px;font-size:15px;padding:10px 18px}
+.assistant-voice-duration{width:100%;margin:5px 0 0;font-variant-numeric:tabular-nums;font-size:14px;color:#5b5142}
+.assistant-voice-space .voice-orb:disabled{cursor:wait}
+.assistant-voice-space .voice-orb[aria-pressed="true"]{outline:2px solid #d4a62e;outline-offset:5px}
+#assistant-voice-dock{position:fixed;z-index:155;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));transform:translateX(-50%);width:min(476px,calc(100% - 24px));padding:10px 12px;border:1px solid #d7bd78;border-radius:16px;background:linear-gradient(130deg,#25262a,#090a0b);box-shadow:0 5px 20px #0005;color:#fff}
+#assistant-voice-dock-status{margin:0 0 8px;font-size:13px;line-height:1.4;font-weight:650;color:#fff}
+.assistant-voice-dock-controls{display:flex;flex-wrap:wrap;gap:8px}
+.assistant-voice-dock-controls button{min-height:44px;min-width:76px;padding:9px 14px;font-size:14px;flex:1}
+#assistant-voice-dock button:focus-visible{outline:3px solid #ffe279;outline-offset:3px}
+.xtreme-voice-session-open #main{padding-bottom:130px}

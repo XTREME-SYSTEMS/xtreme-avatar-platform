@@ -1,0 +1,27 @@
+{
+  "name": "Xtreme Avatar \u2014 XPS Intelligence",
+  "short_name": "Xtreme Avatar",
+  "description": "Your XPS assistant for voice, video, chat and tasks. Internet and sign-in required.",
+  "start_url": "/#home",
+  "display": "standalone",
+  "background_color": "#090a0b",
+  "theme_color": "#090a0b",
+  "icons": [
+    {
+      "src": "/assets/app-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/app-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "id": "/",
+  "scope": "/",
+  "orientation": "portrait-primary",
+  "prefer_related_applications": false
+}

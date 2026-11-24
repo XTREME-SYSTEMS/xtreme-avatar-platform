@@ -1,0 +1,7 @@
+.assistant-action-receipts{display:grid;gap:10px;margin-top:12px}
+.assistant-action-receipt{display:grid;gap:7px;padding:12px;border:1px solid #8d8b81;border-radius:13px;background:linear-gradient(125deg,#fff,#eeedf0);color:#17181b}
+.assistant-action-receipt strong{font-size:14px}.assistant-action-receipt p{margin:0;font-size:14px;overflow-wrap:anywhere}.assistant-action-receipt small{line-height:1.5;overflow-wrap:anywhere;color:#50515a}
+.assistant-action-receipt button{justify-self:start;min-height:44px;margin-top:3px}.assistant-action-receipt button:focus-visible{outline:3px solid #ae7d17;outline-offset:3px}
+.assistant-action-notice{position:fixed;z-index:156;left:50%;transform:translateX(-50%);bottom:calc(90px + env(safe-area-inset-bottom));width:min(460px,calc(100% - 32px));padding:12px 14px;border:1px solid #c7ac62;border-radius:12px;background:#18191df5;color:#fff;font-size:13px;line-height:1.5;overflow-wrap:anywhere}
+.assistant-action-notice button{display:flex;min-height:44px;margin-top:10px}
+.xtreme-voice-session-open .assistant-action-notice{bottom:calc(204px + env(safe-area-inset-bottom))}

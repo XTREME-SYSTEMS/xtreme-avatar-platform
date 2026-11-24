@@ -1,0 +1,26 @@
+/* The Tavus layer is isolated; existing Xtreme Avatar styles stay unchanged. */
+#tavus-live-layer{inset:0;margin:0;padding:0;width:100vw;max-width:none;height:100vh;height:100dvh;max-height:none;border:0;border-radius:0;background:#08090b;color:#fff;overflow:hidden;box-shadow:none}
+#tavus-live-layer[open]{display:flex;flex-direction:column}
+#tavus-live-layer::backdrop{background:#08090b}
+#tavus-live-layer .tavus-layer-bar{flex:0 0 auto;min-height:calc(52px + env(safe-area-inset-top));padding:calc(6px + env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) 6px max(12px,env(safe-area-inset-left));display:flex;gap:12px;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#343538,#08090b);border-bottom:1px solid #b99d51}
+#tavus-live-layer .tavus-layer-back{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:8px 12px;font-size:14px;font-weight:650;border-radius:10px;border:1px solid #d9c588;color:#fff3c5;background:#17191c;cursor:pointer}
+#tavus-live-layer .tavus-layer-back svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.7}
+#tavus-live-layer .tavus-layer-name{font-size:13px;font-weight:650;letter-spacing:.2px;color:#e2d5b2}
+#tavus-live-layer .tavus-layer-stage{display:flex;flex-direction:column;position:relative;flex:1 1 auto;min-height:0;width:100%;overflow:hidden;padding-bottom:env(safe-area-inset-bottom);background:#08090b}
+#tavus-live-layer tavus-embed{flex:1 1 auto;display:block;width:100%;height:100%;min-height:0}
+#tavus-live-layer .tavus-layer-status{position:absolute;inset:0;display:grid;place-content:center;text-align:center;padding:30px;color:#eee;gap:12px;pointer-events:none;background:#08090b;z-index:2}
+#tavus-live-layer .tavus-layer-status[hidden]{display:none}
+#tavus-live-layer .tavus-layer-status h2{font-size:21px;padding:0;color:#f1e4ba;margin:0}
+#tavus-live-layer .tavus-layer-status p{font-size:13px;line-height:1.6;color:#c8c9cd;max-width:350px;margin:auto}
+#tavus-live-layer .tavus-layer-error{position:absolute;bottom:max(14px,env(safe-area-inset-bottom));left:14px;right:14px;z-index:3;margin:0;padding:11px 14px;border:1px solid #a48b45;border-radius:12px;background:#17191cf2;color:#f0e9d7;font-size:12px;line-height:1.5}
+#tavus-live-layer .tavus-layer-error[hidden]{display:none}
+#tavus-live-layer button:focus-visible{outline:3px solid #ffe279;outline-offset:3px}
+@media(min-width:900px){#tavus-live-layer .tavus-layer-stage{width:100%;margin:0 auto}#tavus-live-layer .tavus-layer-bar{padding-left:24px;padding-right:24px}}
+
+/* Recovery is shown only for confirmed policy blocks or unknown embedded contexts. */
+#tavus-live-layer .tavus-policy-blocked{pointer-events:auto}
+#tavus-live-layer .tavus-policy-blocked a{justify-self:center;text-decoration:none}
+#tavus-live-layer .tavus-preview-hint,#tavus-live-layer .tavus-camera-note{position:relative;z-index:3;margin:0;padding:10px 14px;background:#17191c;color:#e2d5b2;font-size:12px;line-height:1.5}
+#tavus-live-layer .tavus-preview-hint{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px}
+#tavus-live-layer .tavus-preview-hint a{font-size:12px;text-decoration:none}
+#tavus-live-layer a:focus-visible{outline:3px solid #ffe279;outline-offset:3px}

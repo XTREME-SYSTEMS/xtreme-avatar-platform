@@ -1,0 +1,21 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "functions": {
+    "app/api/xtreme-v3/scheduled/route.ts": {
+      "experimentalTriggers": [
+        {
+          "type": "queue/v2beta",
+          "topic": "xtreme-v3-fidelity-readonly"
+        }
+      ]
+    }
+  },
+  "schedules": {
+    "xtreme-v3-five-minute-preview": {
+      "schedule": "*/5 * * * *",
+      "timezone": "UTC",
+      "jitter": 1,
+      "topic": "xtreme-v3-fidelity-readonly"
+    }
+  }
+}

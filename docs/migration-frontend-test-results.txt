@@ -1,0 +1,17 @@
+PASS redirect allowlist blocks external, encoded, control-character and auth-loop destinations
+PASS mutation policy rejects absent, opaque, cross-site, and mismatched origins
+PASS proxy route allowlist
+PASS configuration rejects secret and service-role credentials; accepts only publishable or legacy anon keys
+PASS native Next root serves exact approved HOME_HTML bytes with no-store
+PASS PWA manifest, service worker, hero and account script available
+PASS forged Sites identity and authorization headers cannot sign in
+PASS cross-origin account write and logout blocked over HTTP
+PASS same-origin mutation reaches authentication instead of failing origin validation
+PASS GET logout never changes session; legacy route requires POST confirmation
+PASS legacy sign-in redirects only to same-site Google flow
+PASS invalid callback fails closed without open redirect
+PASS Google OAuth creates PKCE challenge, safe callback and secure HttpOnly cookie; no Workspace data scopes
+PASS unknown API route blocked before upstream
+PASS approved home, styles, hero/assets, nav/app.js and PWA content unchanged from source
+Native Next.js 16.3.4 production build passed.
+Live Google account callback, authenticated persistence and real media sessions: NOT TESTED.

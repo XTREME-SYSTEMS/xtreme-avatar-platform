@@ -1,0 +1,62 @@
+{
+  "hashes": {
+    "public/job-calendar.js": "5c4370cd9fb11c157ce272d63552a536f77c4143b6b8c642ff944676e606527f",
+    "public/job-calendar.css": "c90fd24b01c0f53039f4978905f8b758773cba7b8c44c895ba33009aaed679c1",
+    "public/app.js": "3e94a349304c438f31b4d60617f3bc74fad3f4e6fae131bb3f1288e88340f1e9",
+    "public/accounts.js": "10a9425a6c73a726931fe3edd6fcced3a7ae98e4fb8ba58ac4298f9bacdceeb0",
+    "public/google-workspace.js": "378622bf63261bb7983a7954b83b6d331b91b02878aee9ec3fc735b0e52eb0b5",
+    "tests/job-calendar-browser.cjs": "dd15f033632b7d2adf114ec9d8ef7524b1e511d0c2e5dc1b7ca0401b8d7d4d34",
+    "tests/job-calendar-fixture.cjs": "1615575c60c45d59ad762d82e2ce3c0bf5a15083aa0f81f5ee2226c2544438c0",
+    "tests/google-workspace-oauth-client.test.mjs": "267cb197cf34eb5f599be9c68d37a2ee7aa4a10e58d6724ac7d9ab384935d097"
+  },
+  "parity": {
+    "homeFunction": true,
+    "navDefinition": true,
+    "files": [
+      {
+        "path": "home-html.ts",
+        "unchanged": true
+      },
+      {
+        "path": "public/style.css",
+        "unchanged": true
+      },
+      {
+        "path": "app/globals.css",
+        "unchanged": true
+      }
+    ]
+  },
+  "syntax": [
+    {
+      "path": "public/job-calendar.js",
+      "exit": 0,
+      "stderr": ""
+    },
+    {
+      "path": "public/app.js",
+      "exit": 0,
+      "stderr": ""
+    },
+    {
+      "path": "public/accounts.js",
+      "exit": 0,
+      "stderr": ""
+    },
+    {
+      "path": "public/google-workspace.js",
+      "exit": 0,
+      "stderr": ""
+    },
+    {
+      "path": "tests/job-calendar-browser.cjs",
+      "exit": 0,
+      "stderr": ""
+    },
+    {
+      "path": "tests/job-calendar-fixture.cjs",
+      "exit": 0,
+      "stderr": ""
+    }
+  ]
+}

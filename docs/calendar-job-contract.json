@@ -1,0 +1,170 @@
+{
+  "version": 1,
+  "privacy": "creator-private; app files are not Google Calendar attachments",
+  "identity": {
+    "headers": [
+      "X-Xtreme-Account",
+      "X-Xtreme-Connection-Revision"
+    ],
+    "eventId": "1..256 ASCII letters/digits/underscore/hyphen; server derives eventRef from freshly verified current Google binding",
+    "jobId": "Optional existing current-user work_hub_v1 job ID; null if unlinked"
+  },
+  "limits": {
+    "fileBytes": 4000000,
+    "filesPerEvent": 10,
+    "userBytes": 200000000,
+    "jobNotes": 4000,
+    "client": 100,
+    "location": 160,
+    "fileName": 160,
+    "mimeTypes": [
+      "image/jpeg",
+      "image/png",
+      "image/webp",
+      "application/pdf"
+    ]
+  },
+  "jobData": {
+    "jobId": null,
+    "client": "",
+    "location": "",
+    "stage": "scheduled",
+    "notes": ""
+  },
+  "stages": [
+    "lead",
+    "estimating",
+    "scheduled",
+    "active",
+    "complete"
+  ],
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/api/calendar/job",
+      "query": [
+        "eventId"
+      ],
+      "response": {
+        "eventId": "...",
+        "eventRef": "server-derived",
+        "version": 0,
+        "job": {
+          "jobId": null,
+          "client": "",
+          "location": "",
+          "stage": "scheduled",
+          "notes": ""
+        },
+        "projectMissing": false,
+        "attachments": [],
+        "limits": "see limits"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/calendar/job",
+      "body": {
+        "eventId": "...",
+        "version": 0,
+        "data": {
+          "jobId": null,
+          "client": "",
+          "location": "",
+          "stage": "scheduled",
+          "notes": ""
+        }
+      },
+      "response": {
+        "saved": true,
+        "version": 1
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/calendar/job-files/reserve",
+      "body": {
+        "eventId": "...",
+        "jobVersion": 1,
+        "requestId": "client UUID for this file; reuse only for same reserve attempt",
+        "fileName": "site.jpg",
+        "mimeType": "image/jpeg",
+        "byteSize": 12000
+      },
+      "response": {
+        "attachment": {
+          "id": "server UUID",
+          "fileName": "site.jpg",
+          "mimeType": "image/jpeg",
+          "byteSize": 12000,
+          "status": "reserved",
+          "version": 1,
+          "createdAt": "UTC ISO"
+        },
+        "replayed": false
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/calendar/job-files/upload",
+      "query": [
+        "eventId",
+        "attachmentId"
+      ],
+      "contentType": "application/octet-stream",
+      "body": "raw bytes; exactly reserved byteSize",
+      "response": {
+        "attachment": "public attachment shape with status ready"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/calendar/job-files/content",
+      "query": [
+        "eventId",
+        "attachmentId"
+      ],
+      "response": "Authenticated private/no-store bytes; Content-Disposition attachment for every file; supported images may be decoded into a bounded client canvas preview."
+    },
+    {
+      "method": "POST",
+      "path": "/api/calendar/job-files/remove",
+      "body": {
+        "eventId": "...",
+        "attachmentId": "UUID",
+        "version": 1,
+        "confirm": true
+      },
+      "response": {
+        "removed": true,
+        "attachmentId": "UUID"
+      }
+    }
+  ],
+  "attachmentFields": [
+    "id",
+    "fileName",
+    "mimeType",
+    "byteSize",
+    "status",
+    "version",
+    "createdAt"
+  ],
+  "attachmentStates": [
+    "reserved",
+    "uploading",
+    "ready",
+    "deleting",
+    "deleted",
+    "failed"
+  ],
+  "behavior": [
+    "No caller-supplied eventRef, storage path, owner, hash or ready state accepted.",
+    "Save job details before reserving a file; jobVersion uses metadata CAS.",
+    "Retries may reconcile the same reservation but never silently allocate a duplicate file.",
+    "Delete needs explicit user action confirm=true; repeated same deletion returns removed=true.",
+    "Only ready files can be opened. Refresh may reconcile an already requested upload, never re-upload or delete automatically.",
+    "User must reconnect current Google account to access that account's linked event context; switching Google accounts never aliases old eventRef.",
+    "No Google event writes, attendees, descriptions or native attachment mutations."
+  ]
+}

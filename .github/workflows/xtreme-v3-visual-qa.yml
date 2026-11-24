@@ -1,0 +1,42 @@
+name: Xtreme Avatar V3 Visual QA
+on:
+  push:
+    branches:
+      - 'feature/xtreme-avatar-v3-*'
+    paths:
+      - 'public/xtreme-v3/**'
+      - 'tests/test_xtreme_v3_fidelity.py'
+      - '.github/workflows/xtreme-v3-visual-qa.yml'
+  pull_request:
+    branches:
+      - 'migration/vercel-supabase'
+    paths:
+      - 'public/xtreme-v3/**'
+      - 'tests/test_xtreme_v3_fidelity.py'
+permissions:
+  contents: read
+concurrency:
+  group: xtreme-v3-visual-qa-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  screenshot-qa:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install isolated browser test dependencies
+        run: |
+          python -m pip install --disable-pip-version-check playwright==1.65.2
+          python -m playwright install --with-deps chromium
+      - name: Render and inspect responsive preview
+        run: python tests/test_xtreme_v3_fidelity.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: xtreme-v3-visual-evidence
+          path: artifacts/xtreme-v3/
+          if-no-files-found: warn
+          retention-days: 7

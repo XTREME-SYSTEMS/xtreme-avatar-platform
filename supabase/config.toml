@@ -1,0 +1,4 @@
+# The function verifies every bearer through Supabase Auth getUser().
+# Gateway legacy JWT checks are disabled to support project asymmetric signing keys.
+[functions.xtreme-avatar-api]
+verify_jwt = false

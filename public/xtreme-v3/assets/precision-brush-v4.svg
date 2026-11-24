@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" preserveAspectRatio="none">
+<defs>
+  <linearGradient id="alloy" x1="0" y1="0" x2="1" y2=".06">
+    <stop offset="0" stop-color="#282c30"/><stop offset=".10" stop-color="#62676c"/>
+    <stop offset=".24" stop-color="#3c4045"/><stop offset=".37" stop-color="#8b9195"/>
+    <stop offset=".48" stop-color="#303438"/><stop offset=".65" stop-color="#666b70"/>
+    <stop offset=".79" stop-color="#272b2f"/><stop offset="1" stop-color="#8c8f93"/>
+  </linearGradient>
+  <filter id="fibers" x="-3%" y="-3%" width="106%" height="106%">
+    <feTurbulence type="fractalNoise" baseFrequency=".013 .89" numOctaves="3" seed="19" stitchTiles="stitch" result="noise"/>
+    <feColorMatrix in="noise" type="saturate" values="0" result="grey"/>
+    <feComponentTransfer in="grey"><feFuncR type="linear" slope=".66" intercept=".17"/><feFuncG type="linear" slope=".66" intercept=".17"/><feFuncB type="linear" slope=".66" intercept=".17"/></feComponentTransfer>
+  </filter>
+  <pattern id="hairlines" width="512" height="5" patternUnits="userSpaceOnUse">
+    <path d="M0 .35H512" stroke="#f8faff" stroke-opacity=".22" stroke-width=".55"/>
+    <path d="M0 1.25H512" stroke="#090c12" stroke-opacity=".25" stroke-width=".5"/>
+    <path d="M0 2.15H512" stroke="#f5f6f9" stroke-opacity=".14" stroke-width=".35"/>
+    <path d="M0 3.4H512" stroke="#090b0e" stroke-opacity=".30" stroke-width=".75"/>
+    <path d="M0 4.25H512" stroke="#e6e8ed" stroke-opacity=".18" stroke-width=".4"/>
+  </pattern>
+</defs>
+<rect width="512" height="512" fill="url(#alloy)" opacity=".64"/>
+<rect width="512" height="512" filter="url(#fibers)" opacity=".24"/>
+<rect width="512" height="512" fill="url(#hairlines)" opacity=".70"/>
+</svg>

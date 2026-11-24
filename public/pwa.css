@@ -1,0 +1,10 @@
+#xtreme-pwa-install{width:min(420px,calc(100vw - 28px));max-height:85dvh;padding:24px;border:1px solid #fff1b5;border-radius:20px;background:linear-gradient(135deg,#fff,#e5e5ed);color:#17181b;box-shadow:0 18px 60px #0007}
+#xtreme-pwa-install::backdrop{background:#090a0bc9}
+#xtreme-pwa-install h2{font-size:23px;margin:0 42px 18px 0;padding:0;line-height:1.2}
+#xtreme-pwa-install p,#xtreme-pwa-install li{font-size:14px;line-height:1.55;color:#44454d}
+#xtreme-pwa-install ol{padding-left:21px}
+#xtreme-pwa-install .pwa-close{position:absolute;right:14px;top:12px;min-width:44px;min-height:44px;border:1px solid #b8b8c1;border-radius:50%;background:#f9f9fc;color:#202126;font-size:25px;cursor:pointer}
+#xtreme-pwa-install .pwa-install{display:block;width:100%;min-height:48px;margin-top:18px;padding:12px;border:1px solid #fff9dc;border-radius:12px;background:linear-gradient(#fff2c5,#e4b437);color:#17140b;font-size:16px;font-weight:bold;cursor:pointer}
+#xtreme-pwa-install button:focus-visible{outline:3px solid #9f7013;outline-offset:3px}
+#xtreme-pwa-install button:disabled{opacity:.6;cursor:wait}
+#xtreme-pwa-install .pwa-note{font-size:12px;margin-top:18px;color:#5b5c65}
