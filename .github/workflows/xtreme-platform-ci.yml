@@ -30,6 +30,8 @@ jobs:
         run: npm run build
       - name: Durable loop contracts
         run: node --test tests/xtreme-v3-loop-contract.test.mjs tests/xtreme-v4-home-source.test.mjs
+      - name: Eden Core owner bridge contract tests
+        run: node --test tests/eden-core-bridge.test.mjs
   browser:
     needs: quality
     runs-on: ubuntu-24.04
