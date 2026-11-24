@@ -1,3 +1,13 @@
+# XTREME AVATAR | Concept to Complete
+
+**New private canonical-candidate frontend repository. Not the current production source or deployed domain.** This repository imports the approved Xtreme Avatar source from `xps-admin/xtreme-avatar@5f85a3b5335bf0b110c5a5281c3eff48c2f894a9` as a clean migration snapshot. The existing owner-controlled repository, Vercel Preview and production services remain unchanged until release certification and source migration approval.
+
+**Live operating links:** [GitHub Project V2 / Kanban](https://github.com/orgs/XTREME-SYSTEMS/projects/3) · [Mission Issues](https://github.com/XTREME-SYSTEMS/xtreme-avatar-platform/issues) · [CI runs](https://github.com/XTREME-SYSTEMS/xtreme-avatar-platform/actions) · [Private bootstrap plugin](https://chatgpt.com/plugins/plugins_6b051ad0372c8191a6795ab1245276a3).
+
+**Source-of-truth:** `AGENTS.md`, `docs/PLATFORM_MISSION_CONTRACT.md`, `docs/PROVIDERS_AND_CREDENTIALS.md`, `docs/RELEASE_GATES.md`, and `docs/OPERATING_ROADMAP.md`. Eight specialist roles in `.github/agents` are **agent configurations**, not guaranteed live Codex/Eve runs. The existing Eve factory must explicitly authorize this new repository before execution. The [original migration README](#original-migration-source-notes) below is retained as imported historical context and includes URLs that describe the older source.
+
+## Original migration source notes
+
 # Xtreme Avatar
 
 Mobile XPS assistant with Voice, Video, Chat and Tasks. The approved home, compact AI Assist hero, artwork, metallic bands, navigation and PWA assets are preserved.
