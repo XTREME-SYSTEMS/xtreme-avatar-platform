@@ -1,0 +1,30 @@
+name: Concept-to-Complete Mission
+description: Single owner-scoped task from concept through verified delivery
+title: "[Mission] "
+labels: ["mission"]
+body:
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Customer outcome
+      description: A measurable deliverable, not a tool or a prompt
+    validations:
+      required: true
+  - type: textarea
+    id: tests
+    attributes:
+      label: Acceptance tests
+      description: Actual behavior, browser test and artifact link expected
+    validations:
+      required: true
+  - type: textarea
+    id: safeguards
+    attributes:
+      label: Scope, tenant, permissions, cost and rollback
+      description: No API keys, secrets or sensitive customer records
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Original Eve run ID, SHA and current receipt
