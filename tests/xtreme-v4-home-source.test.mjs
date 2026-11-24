@@ -30,3 +30,11 @@ test('the original authorized API routes remain in place', () => {
   assert.match(source('app/api/[...path]/route.ts'), /proxyApi/);
   assert.match(source('server/supabase-auth.ts'), /NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY/);
 });
+
+test('GET / returns a real 307 redirect and never mutates immutable headers', async () => {
+  const { GET } = await import('../app/route.ts');
+  const response = GET(new Request('https://xtreme-avatar-platform.example.test/'));
+  assert.equal(response.status, 307);
+  assert.equal(response.headers.get('location'), 'https://xtreme-avatar-platform.example.test/xtreme-v3/index.html');
+  assert.match(response.headers.get('cache-control') ?? '', /no-store/);
+});
