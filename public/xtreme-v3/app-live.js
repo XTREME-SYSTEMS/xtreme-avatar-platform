@@ -110,6 +110,7 @@
       if (!account.user || !account.user.id) throw Error('Account verification did not return a member.');
       if (previous && previous !== account.user.id) {
         state.chatMessages = []; state.work = null; state.google = null;
+        state.voiceRequestId = null; state.voiceSessionId = null; state.voiceState = 'idle';
         await closeLocalVoice();
       }
       state.user = account.user;
@@ -124,6 +125,7 @@
       state.chatMessages = []; state.google = null; state.chatReady = false; state.voiceReady = false;
       state.errors.account = error.message;
       await closeLocalVoice();
+      state.voiceRequestId = null; state.voiceSessionId = null; state.voiceState = 'idle';
       show();
     }
   }
@@ -367,6 +369,7 @@
     if (!navigator.mediaDevices || !window.RTCPeerConnection) throw Error('This browser does not support secure voice calls.');
     state.voiceState='connecting';show();
     const requestId=crypto.randomUUID();
+    let dispatched=false;
     state.voiceRequestId=requestId;
     try {
       const stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}});
@@ -378,6 +381,7 @@
       pc.addEventListener('track', event=>{audio.srcObject=event.streams[0];audio.play().catch(()=>{});});
       await pc.setLocalDescription(await pc.createOffer({offerToReceiveAudio:true}));
       await waitIce(pc);
+      dispatched=true;
       const result=await api('/api/assistant/voice/start',{requestId,sdp:pc.localDescription.sdp},65000);
       if (result.ok!==true || result.state!=='ready' || !result.sdp || !result.configurationVerified)
         throw Error('The voice service did not confirm a ready session. Check its status.');
@@ -386,7 +390,9 @@
       state.voiceState='active';show();
     } catch(error) {
       await closeLocalVoice();
-      state.voiceState='uncertain';state.errors.voice=error.message;show();
+      if (dispatched) state.voiceState='uncertain';
+      else { state.voiceRequestId=null; state.voiceState='idle'; }
+      state.errors.voice=error.message;show();
       throw error;
     }
   }
