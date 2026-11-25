@@ -40,7 +40,7 @@ function environment(fetcher) {
     skin:'aluminum',render(){},
     head:(title,sub)=>'<h1>'+title+'</h1><p>'+sub+'</p>',
     card:inside=>inside,
-    row:(_icon,title,sub)=>'<p>'+title+' '+sub+'</p>',
+    row:(_icon,title,sub,to)=>'<button data-go="'+to+'">'+title+' '+sub+'</button>',
     svgIcon:()=>'<svg></svg>',
     showNotice(){},
     window:{addEventListener:(type,handler)=>{windowHandlers[type]=handler;},RTCPeerConnection:null},
@@ -195,4 +195,74 @@ test('signed-in owner sees authenticated work and saved chat history',async()=>{
   assert.match(renderFns.voice(),/Not configured/);
   assert.ok(calls.filter(c=>c.path!=='/api/account').every(c=>c.headers['X-Xtreme-Account']===user.id));
   assert.doesNotMatch(renderFns.tasks(),/Demo:/);
+});
+
+test('recovered voice request keeps an explicit End action until closure is confirmed',async()=>{
+  const requestId='33333333-3333-4333-8333-333333333333';
+  const calls=[];
+  let endAttempts=0;
+  const h=environment(async(path,config)=>{
+    const body=config.body?JSON.parse(config.body):null;
+    calls.push({path,body});
+    if(path==='/api/account')return reply({user:{id:'11111111-1111-4111-8111-111111111111',role:'owner'},data:{profile:{}}});
+    if(path==='/api/work-hub')return reply({version:0,jobs:[],results:[]});
+    if(path==='/api/assistant/status')return reply({chat:{ready:true}});
+    if(path==='/api/assistant/chat')return reply({messages:[],pending:false});
+    if(path==='/api/connections/google/status')return reply({connected:false});
+    if(path==='/api/assistant/voice/status')return reply({ready:true,pendingRequest:{requestId}});
+    if(path==='/api/assistant/voice/status?requestId='+requestId)
+      return reply({requestId,state:'ready',finalized:false});
+    if(path==='/api/assistant/voice/end'){
+      if(++endAttempts===1)return reply({requestId,state:'closing',finalized:false},202);
+      if(endAttempts===2)throw Error('Lost end response');
+      return reply({requestId,state:'closed',finalized:true});
+    }
+    return reply({},404);
+  });
+  const click=command=>h.handlers.click({target:{closest:()=>({dataset:{live:command},disabled:false})},preventDefault(){}});
+  const recoverable=()=>{
+    assert.match(h.renderFns.voice(),/data-live="end-voice"[^>]*>End previous call/);
+    assert.match(h.renderFns.voice(),/data-live="check-voice"/);
+    assert.doesNotMatch(h.renderFns.voice(),/data-live="start-voice"|Voice call active/);
+  };
+  await settle();recoverable();
+  assert.equal(calls.filter(c=>c.body).length,0);
+  await click('check-voice');recoverable();
+  await click('end-voice');recoverable();
+  await click('end-voice');recoverable();
+  await click('end-voice');
+  assert.match(h.renderFns.voice(),/data-live="start-voice"/);
+  assert.doesNotMatch(h.renderFns.voice(),/End previous call|Check previous call/);
+  const ends=calls.filter(c=>c.path==='/api/assistant/voice/end');
+  assert.equal(ends.length,3);
+  for(const call of ends)assert.deepEqual(call.body,{requestId});
+  assert.equal(calls.filter(c=>c.path==='/api/assistant/voice/start').length,0);
+});
+
+test('a saved idea is reachable from the notebook and existing More navigation',async()=>{
+  let work={version:0,jobs:[],results:[]};
+  const h=environment(async(path,config)=>{
+    if(path==='/api/account')return reply({user:{id:'11111111-1111-4111-8111-111111111111',role:'owner'},data:{profile:{}}});
+    if(path==='/api/work-hub')return reply(work);
+    if(path==='/api/work-hub/results'){
+      const body=JSON.parse(config.body);
+      assert.equal(body.action,'create');assert.equal(body.version,work.version);
+      work={...work,version:work.version+1,results:[...work.results,{id:body.id,...body.data}]};
+      return reply({ok:true});
+    }
+    if(path==='/api/assistant/status')return reply({chat:{ready:true}});
+    if(path==='/api/assistant/chat')return reply({messages:[],pending:false});
+    if(path==='/api/assistant/voice/status')return reply({ready:false});
+    if(path==='/api/connections/google/status')return reply({connected:false});
+    return reply({},404);
+  });
+  await settle();
+  await h.handlers.submit({target:{id:'live-idea-form',values:{title:'Saved project idea',details:'Keep these requirements'}},preventDefault(){}});
+  for(const name of ['ideas','more']){
+    const navigation=h.renderFns[name]().match(/data-go="([^"]+)"[^>]*>Saved ideas and results/);
+    assert.ok(navigation,'Saved results must be reachable from '+name);
+    const destination=h.renderFns[navigation[1]]();
+    assert.match(destination,/Saved project idea/);
+    assert.match(destination,/Keep these requirements/);
+  }
 });

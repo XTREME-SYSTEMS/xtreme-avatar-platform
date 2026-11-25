@@ -33,7 +33,8 @@ def fake_private_api(route, signed_in=True):
     work={"userId":account["user"]["id"],"version":1,
           "jobs":[{"id":"job1","name":"Authenticated saved work","client":"","location":"",
                    "stage":"lead","dueDate":"","notes":"Saved source data","links":[]}],
-          "results":[],"briefing":{}}
+          "results":[{"id":"result1","title":"Saved project idea","kind":"note",
+                      "text":"Saved idea requirements","links":[]}],"briefing":{}}
     responses={
         "/api/account":account,
         "/api/work-hub":work,
@@ -92,6 +93,17 @@ try:
             if width==390:page.screenshot(path=str(OUT/"video-390.png"),full_page=True)
             page.locator('.video-top button[data-go="home"]').click()
             page.locator('.bottom-nav button[data-go="more"]').click()
+            page.get_by_role('button',name='Saved ideas and results').click()
+            assert page.locator('#app').get_attribute('data-page')=='finished'
+            assert "Saved project idea" in page.locator('#view').inner_text()
+            assert "Saved idea requirements" in page.locator('#view').inner_text()
+            if width==390:page.screenshot(path=str(OUT/"saved-results-390.png"),full_page=True)
+            page.locator('.bottom-nav button[data-go="home"]').click()
+            page.locator('button[data-go="ideas"]').first.click()
+            page.get_by_role('button',name='Saved ideas and results').click()
+            assert page.locator('#app').get_attribute('data-page')=='finished'
+            assert "Saved project idea" in page.locator('#view').inner_text()
+            page.locator('.bottom-nav button[data-go="more"]').click()
             page.locator('button[data-go="customize"]').first.click()
             page.locator('button[data-skin="blue"]').click()
             assert page.locator("#app").get_attribute("data-skin")=="blue"
@@ -105,6 +117,7 @@ try:
             results.append({"viewport":f"{width}x{height}","overflow":bounds["doc"]-width,
                             "nav":4,"icons":6,"hero":True,"metal_assets":True,
                             "video_stage":True,"skins":True,"mocked_auth_ui":True,
+                            "saved_results_navigation":True,
                             "js_errors":0})
             context.close()
 

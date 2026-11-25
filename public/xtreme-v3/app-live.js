@@ -247,6 +247,7 @@
       '<input name="title" maxlength="100" required placeholder="Describe your idea"></label>' +
       '<label class="field"><span>Details</span><textarea name="details" maxlength="6000" required placeholder="Goals and requirements"></textarea></label>' +
       '<button class="cta primary" type="submit">Save idea</button></form>', 'pad') +
+      row('finished','Saved ideas and results','Open your private saved notes','finished') +
       action('refresh','Refresh saved results');
   }
   function workspaceLive() {
@@ -271,7 +272,7 @@
     else if (state.voiceState === 'connecting') content += box('Connecting','Requesting microphone and negotiating secure audio.');
     else if (state.voiceState === 'uncertain') content += box('Check previous call',
       'An earlier voice request may still exist. Do not launch another paid session until its status is reconciled.',
-      action('check-voice','Check call status','primary'));
+      action('end-voice','End previous call','primary') + action('check-voice','Check call status'));
     else content += state.voiceReady ? card('<label class="checkline"><input type="checkbox" id="live-mic-consent">I agree to start a metered voice session and grant microphone access.</label>' +
       action('start-voice','Start voice call','primary'), 'pad') : '';
     return content + action('refresh','Refresh voice availability');
@@ -301,7 +302,8 @@
     return head('Control Center', 'Real account settings, appearance and provider connection status.') +
       '<div class="stack">' +
       row('spark','Choose a skin','Device appearance only; never changes permissions','customize') +
-      row('tasks','Saved work and results','Account-scoped Work Hub','tasks') +
+      row('tasks','Saved work','Account-scoped Work Hub','tasks') +
+      row('finished','Saved ideas and results','Open your private saved notes','finished') +
       row('calendar','Workspace connections','Inspect available Google connections','workspace') +
       row('approvals','Approval status','Requires a verified approval service','approvals') +
       row('home','Account settings','Verified identity and display name','onboarding') +
