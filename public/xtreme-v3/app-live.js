@@ -7,6 +7,7 @@
   const state = {
     phase: 'checking', user: null, account: null, work: null,
     chatReady: false, chatMessages: [], chatPending: false,
+    chatRequest: null, chatDraft: '', chatSending: false,
     voiceReady: false, voiceRequestId: null, voiceSessionId: null,
     voiceState: 'idle', voicePc: null, voiceStream: null, voiceAudio: null,
     google: null, errors: {}, saving: false
@@ -43,10 +44,11 @@
   function requireAuth(content) { return isAuthed() ? content : authView(); }
   async function api(path, data, timeout) {
     if (!path.startsWith('/api/') || path.includes('://')) throw Error('Invalid application route.');
+    const owner = path === '/api/account' ? null : state.user && state.user.id;
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeout || 14000);
     const headers = { Accept: 'application/json' };
-    if (state.user && state.user.id) headers['X-Xtreme-Account'] = state.user.id;
+    if (path !== '/api/account' && state.user && state.user.id) headers['X-Xtreme-Account'] = state.user.id;
     if (data !== undefined) headers['Content-Type'] = 'application/json';
     try {
       const response = await fetch(path, {
@@ -56,10 +58,22 @@
         signal: controller.signal
       });
       const payload = await response.json().catch(() => ({}));
+      if (owner && (!isAuthed() || state.user.id !== owner))
+        throw Error('Your signed-in account changed. Refresh before continuing.');
       if (!response.ok) {
         const error = new Error(typeof payload.error === 'string' ? payload.error : 'The secure request could not complete.');
         error.status = response.status;
         error.code = payload.code;
+        error.terminal = payload.terminal === true || payload.code === 'invalid_request';
+        if (owner && (response.status === 401 || response.status === 403 || payload.code === 'account_changed')) {
+          state.phase = response.status === 401 ? 'signed-out' : 'error';
+          state.user = null; state.account = null; state.work = null; state.google = null;
+          state.chatMessages = []; state.chatRequest = null; state.chatDraft = '';
+          state.chatPending = false; state.chatReady = false; state.voiceReady = false;
+          state.errors.account = 'Your account session changed. Sign in or refresh to continue.';
+          await closeLocalVoice();
+          show();
+        }
         throw error;
       }
       return payload;
@@ -73,15 +87,33 @@
     catch (error) { state.work = null; state.errors.work = error.message; }
   }
   async function refreshChat() {
+    const owner = state.user && state.user.id;
     try {
       const [status, history] = await Promise.all([
         api('/api/assistant/status'), api('/api/assistant/chat')
       ]);
+      if (!isAuthed() || state.user.id !== owner) return;
+      if (!Array.isArray(history.messages)) throw Error('Conversation history could not be verified.');
       state.chatReady = status.chat && status.chat.ready === true;
-      state.chatMessages = Array.isArray(history.messages) ? history.messages : [];
-      state.chatPending = history.pending === true;
+      state.chatMessages = history.messages;
+      const earlier = state.chatRequest;
+      const confirmed = earlier && history.messages.some(m =>
+        m.id === earlier.requestId + '-assistant' && m.role === 'assistant' &&
+        typeof m.content === 'string' && m.content.trim());
+      if (confirmed) {
+        state.chatRequest = null;
+        if (state.chatDraft === earlier.message) state.chatDraft = '';
+      }
+      const pending = history.pendingRequest;
+      if (history.pending === true && pending &&
+          typeof pending.requestId === 'string' &&
+          /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(pending.requestId) &&
+          typeof pending.message === 'string' && pending.message.trim() && pending.message.length <= 4000)
+        state.chatRequest = {requestId: pending.requestId, message: pending.message};
+      state.chatPending = history.pending === true || !!state.chatRequest;
       state.errors.chat = status.chat && !status.chat.ready ? status.chat.reason : '';
     } catch (error) {
+      if (!isAuthed() || state.user.id !== owner) return;
       state.chatReady = false;
       state.errors.chat = error.message;
     }
@@ -110,6 +142,7 @@
       if (!account.user || !account.user.id) throw Error('Account verification did not return a member.');
       if (previous && previous !== account.user.id) {
         state.chatMessages = []; state.work = null; state.google = null;
+        state.chatRequest = null; state.chatDraft = ''; state.chatPending = false;
         state.voiceRequestId = null; state.voiceSessionId = null; state.voiceState = 'idle';
         await closeLocalVoice();
       }
@@ -123,6 +156,7 @@
       state.phase = error.status === 401 ? 'signed-out' : 'error';
       state.user = null; state.account = null; state.work = null;
       state.chatMessages = []; state.google = null; state.chatReady = false; state.voiceReady = false;
+      state.chatRequest = null; state.chatDraft = ''; state.chatPending = false;
       state.errors.account = error.message;
       await closeLocalVoice();
       state.voiceRequestId = null; state.voiceSessionId = null; state.voiceState = 'idle';
@@ -167,13 +201,14 @@
     const status = state.chatReady ? label('AI CHAT READY') :
       label('CHAT NOT VERIFIED') + '<p class="screen-note">' + safe(state.errors.chat || 'The provider is not configured for this account.') + '</p>';
     const form = '<form id="live-chat-form"><label class="field"><span>Message Eden</span>' +
-      '<textarea name="message" maxlength="4000" rows="3" placeholder="What would you like help with?" required></textarea></label>' +
+      '<textarea name="message" maxlength="4000" rows="3" placeholder="What would you like help with?" required>' + safe(state.chatDraft) + '</textarea></label>' +
       '<button class="cta primary" type="submit"' + (!state.chatReady || state.chatPending || state.saving ? ' disabled' : '') +
       '>Send message</button></form>';
     return head('Eden Chat', 'Private history from your verified account, not sample messages.') +
       status + '<h2 class="section-heading">Conversation</h2>' +
       (messages || box('No messages yet', 'Send a message when your secure AI connection is ready.')) +
-      (state.chatPending ? box('Request pending', 'An earlier reply is being processed. Refresh before sending again.', action('refresh', 'Refresh status')) : '') +
+      (state.chatPending ? box('Reply not confirmed', 'Check the existing message before sending another. A retry uses the same request ID.',
+        state.chatRequest ? action('retry-chat', 'Retry this message', 'primary', !state.chatReady || state.chatSending || state.saving) : action('refresh', 'Refresh status')) : '') +
       form + action('refresh', 'Refresh conversation', 'subtle');
   }
   function tasksLive() {
@@ -212,6 +247,7 @@
       '<input name="title" maxlength="100" required placeholder="Describe your idea"></label>' +
       '<label class="field"><span>Details</span><textarea name="details" maxlength="6000" required placeholder="Goals and requirements"></textarea></label>' +
       '<button class="cta primary" type="submit">Save idea</button></form>', 'pad') +
+      row('finished','Saved ideas and results','Open your private saved notes','finished') +
       action('refresh','Refresh saved results');
   }
   function workspaceLive() {
@@ -236,7 +272,7 @@
     else if (state.voiceState === 'connecting') content += box('Connecting','Requesting microphone and negotiating secure audio.');
     else if (state.voiceState === 'uncertain') content += box('Check previous call',
       'An earlier voice request may still exist. Do not launch another paid session until its status is reconciled.',
-      action('check-voice','Check call status','primary'));
+      action('end-voice','End previous call','primary') + action('check-voice','Check call status'));
     else content += state.voiceReady ? card('<label class="checkline"><input type="checkbox" id="live-mic-consent">I agree to start a metered voice session and grant microphone access.</label>' +
       action('start-voice','Start voice call','primary'), 'pad') : '';
     return content + action('refresh','Refresh voice availability');
@@ -266,7 +302,8 @@
     return head('Control Center', 'Real account settings, appearance and provider connection status.') +
       '<div class="stack">' +
       row('spark','Choose a skin','Device appearance only; never changes permissions','customize') +
-      row('tasks','Saved work and results','Account-scoped Work Hub','tasks') +
+      row('tasks','Saved work','Account-scoped Work Hub','tasks') +
+      row('finished','Saved ideas and results','Open your private saved notes','finished') +
       row('calendar','Workspace connections','Inspect available Google connections','workspace') +
       row('approvals','Approval status','Requires a verified approval service','approvals') +
       row('home','Account settings','Verified identity and display name','onboarding') +
@@ -339,17 +376,34 @@
     if (state.chatPending) throw Error('Your previous message is still pending.');
     const message = String(new FormData(form).get('message') || '').trim();
     if (!message || message.length > 4000) throw Error('Write a message up to 4,000 characters.');
-    state.chatPending = true; show();
-    const requestId=crypto.randomUUID();
+    state.chatDraft = message;
+    state.chatRequest = {message, requestId: crypto.randomUUID()};
+    state.chatPending = true;
+    await deliverChat();
+  }
+  async function deliverChat() {
+    if (!isAuthed() || !state.chatReady || !state.chatRequest || state.chatSending) return;
+    const submitted = {...state.chatRequest}, owner = state.user.id;
+    state.chatSending = true; show();
     try {
-      const response = await api('/api/assistant/chat',{message,requestId},95000);
-      if (response.ok !== true || response.requestId !== requestId) throw Error('Message result could not be verified.');
+      const response = await api('/api/assistant/chat',submitted,95000);
+      if (!isAuthed() || state.user.id !== owner) return;
+      if (response.ok !== true || response.requestId !== submitted.requestId ||
+          typeof response.reply !== 'string' || !response.reply.trim() ||
+          !Array.isArray(response.messages) || !response.messages.some(m =>
+            m.id === submitted.requestId + '-assistant' && m.role === 'assistant' && m.content === response.reply))
+        throw Error('Message result could not be verified.');
+      state.chatRequest = null; state.chatPending = false;
+      if (state.chatDraft === submitted.message) state.chatDraft = '';
+      state.chatMessages = response.messages;
       await refreshChat(); show();
     } catch(error) {
+      if (!isAuthed() || state.user.id !== owner) return;
+      if (error.terminal) { state.chatRequest = null; state.chatPending = false; }
       state.errors.chat = 'Delivery uncertain: ' + error.message;
       await refreshChat(); show();
       throw error;
-    } finally { state.chatPending = false; show(); }
+    } finally { state.chatSending = false; show(); }
   }
   async function waitIce(pc) {
     if (pc.iceGatheringState === 'complete') return;
@@ -458,6 +512,7 @@
         if (command==='retry' || !isAuthed()) await start();
         else {await Promise.allSettled([refreshWork(),refreshChat(),refreshVoice(),refreshGoogle()]);show();}
       } else if (command==='start-voice') await startVoice();
+      else if (command==='retry-chat') await deliverChat();
       else if (command==='end-voice') await endVoice();
       else if (command==='check-voice') await checkVoice();
       else if (command.startsWith('finish-job:')) await updateJob('finish',command.slice(11));
@@ -479,11 +534,19 @@
     state.saving=true;
     try { await handler(event.target); }
     catch(error) { note(error.message); if (error.status===409) {await refreshWork();show();} }
-    finally {state.saving=false;}
+    finally {state.saving=false;show();}
+  });
+  document.addEventListener('input', event => {
+    if (event.target.name === 'message' && event.target.form?.id === 'live-chat-form')
+      state.chatDraft = event.target.value;
   });
   window.addEventListener('beforeunload', () => {
     if (state.voiceStream) state.voiceStream.getTracks().forEach(track=>track.stop());
     if (state.voicePc) state.voicePc.close();
+  });
+  window.addEventListener('focus', () => state.phase === 'checking' ? undefined : start());
+  window.addEventListener('pageshow', event => {
+    if (event.persisted && state.phase !== 'checking') return start();
   });
   show();start();
 })();
