@@ -242,10 +242,13 @@
     return content + action('refresh','Refresh voice availability');
   }
   function videoLive() {
-    return head('Video Avatar', 'Tavus must establish a verified, consented video session.') +
-      authViewIfNeeded() +
-      box('Live Tavus video', 'No authenticated Tavus session has been established by this interface. Select a verified avatar in the connected Avatar Studio when available. Static portraits are not video calls.', label('VIDEO CONNECTION REQUIRED')) +
-      action('refresh','Refresh connections');
+    return '<div class="video-stage"><img src="/assets/eden.webp" alt="Approved avatar reference portrait; live Tavus video is not connected">' +
+      '<div class="video-top"><button data-go="home" aria-label="Back to Home">‹ Back</button>' +
+      '<button data-go="customize">◈ Change skin</button></div>' +
+      '<div class="video-subtitle"><strong>XTREME AVATAR</strong><small>Tavus video requires a verified, consented session.</small></div>' +
+      '<div class="video-controls">' +
+      '<button data-go="workspace">◈<small>Connections</small></button>' +
+      '<button class="end" data-go="home">⌂<small>Back</small></button></div></div>';
   }
   function authViewIfNeeded() { return isAuthed() ? '' : authView(); }
   function approvalsLive() {
