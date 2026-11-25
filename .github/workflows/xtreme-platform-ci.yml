@@ -47,7 +47,7 @@ jobs:
           python -m playwright install --with-deps chromium
       - name: Mobile and UI acceptance
         run: python tests/test_xtreme_v3_fidelity.py
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: xtreme-avatar-ui-evidence
