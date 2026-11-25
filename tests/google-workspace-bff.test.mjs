@@ -162,3 +162,19 @@ test('saved-grant metadata must be boolean and saved or connected states require
   const f=fixture({response});assert.equal((await f.api(request())).status,502);
  }
 });
+
+
+test('canonical production domain uses exact Google OAuth callback and same-origin completion', async () => {
+ const origin='https://www.xtremeavatar.com';
+ assert.ok(GOOGLE_APP_ORIGINS.includes(origin));
+ const f=fixture({response:authorize(origin)});
+ const response=await f.api(request('start',{services:['gmail']},{appOrigin:origin}));
+ assert.equal(response.status,200);
+ const approval=new URL((await response.json()).authorizationUrl);
+ assert.equal(approval.searchParams.get('redirect_uri'),origin+'/api/connections/google/callback');
+ assert.equal(f.calls[0].options.headers.origin,origin);
+ const g=fixture(),callbackResponse=await g.callback(callbackQuery(undefined,origin));
+ assert.equal(callbackResponse.status,303);
+ assert.equal(callbackResponse.headers.get('location'),origin+'/?google=connected#connections');
+ assert.equal(g.calls[0].options.headers.origin,origin);
+});

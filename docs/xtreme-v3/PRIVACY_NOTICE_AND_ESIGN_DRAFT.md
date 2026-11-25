@@ -1,5 +1,7 @@
 # Xtreme Avatar / XPS Intelligence: Privacy Notice, Service Personalization and Electronic Records Consent
 
+**Publication review update — 25 November 2026:** This broad design draft contains proposed future behavior and policy promises, including training defaults and privacy controls, that have not been verified as deployed practices. Use the [source-based public-information review](../google-branding-privacy-review.md) and explicitly draft `/privacy` page for the current disclosure inventory and outstanding owner decisions. Nothing below is an adopted privacy commitment or a verified provider-retention statement.
+
 **Status:** DRAFT FOR LEGAL AND SECURITY REVIEW. Not approved for publication. Effective date: [INSERT]. Contracting legal operator: [VERIFY LEGAL NAME]. Registered address: [INSERT]. Privacy contact: [INSERT WORKING EMAIL]. Data subject request form: [INSERT]. Data retention schedule: [COMPLETE BEFORE LAUNCH]. This document does not grant new data permissions or turn on services.
 
 ## Plain-language key points
