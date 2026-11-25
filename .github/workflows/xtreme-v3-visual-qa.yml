@@ -33,7 +33,7 @@ jobs:
           python -m playwright install --with-deps chromium
       - name: Render and inspect responsive preview
         run: python tests/test_xtreme_v3_fidelity.py
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: xtreme-v3-visual-evidence
